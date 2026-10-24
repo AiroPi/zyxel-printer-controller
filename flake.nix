@@ -16,6 +16,7 @@
               httpx2
               fastapi
               uvicorn
+              tzdata
             ];
         in
         {
