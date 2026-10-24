@@ -23,13 +23,18 @@
             packages = [
               (pkgs.python3.withPackages pythonDeps)
             ];
+            shellHook = ''
+              if [ -f .env ]; then
+                export $(xargs < .env)
+              fi
+            '';
           };
           packages.default =
             let
               pkgs = import nixpkgs { system = "aarch64-linux"; };
               app = lib.fileset.toSource {
                 root = ./.;
-                fileset = ./server.py;
+                fileset = lib.fileset.union ./server.py ./idfmobilite.py;
               };
             in
             pkgs.dockerTools.buildLayeredImage {

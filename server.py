@@ -6,6 +6,15 @@ import fastapi
 import uvicorn
 from pydantic import BaseModel
 
+try:
+    from idfmobilite import get_next_trains
+except KeyError as e:
+    print(f"Warning: environ variable {e.args} missing, idf mobilite integration disabled.")
+    get_next_trains = None
+except:
+    print("Warning: unknown error, idf mobilite integration disabled.")
+    get_next_trains = None
+
 prints_queue: asyncio.Queue[str] = asyncio.Queue()
 print_ready = asyncio.Event()
 current_connection: asyncio.Task[None] | None = None
@@ -77,7 +86,10 @@ async def connection_listener(reader: asyncio.StreamReader):
 
 async def handle_click(a: int, b: int, c: int):
     if (a, b, c) == (1, 0, 0):
-        print("Cheer !")
+        if get_next_trains is not None:
+            next_trains = await get_next_trains("Retour")
+            if next_trains:
+                prints_queue.put_nowait("\n".join(f"{c[0]} in {c[1]} minutes" for c in next_trains[:3]))
     else:
         print(f"Unknown command for {a}, {b}, {c}")
 

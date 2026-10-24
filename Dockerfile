@@ -3,5 +3,5 @@ WORKDIR /app
 RUN --mount=type=bind,source=./pyproject.toml,target=./pyproject.toml \
     --mount=type=bind,source=./uv.lock,target=./uv.lock \
   uv sync --locked --no-dev
-COPY ./server.py ./
+COPY ./server.py ./idfmobilite.py ./
 CMD ["uv", "run", "server.py"]

@@ -1,0 +1,10 @@
+services:
+  zyxel-printer-server:
+    build: .
+    ports:
+      - 1001:1001
+      - 8000:8000
+    environment:
+      API_KEY: "${API_KEY}"
+      LINE_REF: "${LINE_REF}"
+      MONITORING_REF: "${MONITORING_REF}"
