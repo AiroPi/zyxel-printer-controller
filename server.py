@@ -65,7 +65,6 @@ async def connection_listener(reader: asyncio.StreamReader):
     try:
         while True:
             data = await reader.read(1024)
-            print(data)
             strdata = data.decode(errors="ignore")
             if b"\x13" in data:
                 if lock_task is not None and not lock_task.done():
